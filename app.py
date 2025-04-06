@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -89,29 +88,14 @@ def buy(game_id):
 def topup():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    amount = float(request.form['amount'])
-    user = User.query.get(session['user_id'])
-    user.balance += amount
-    db.session.commit()
-    return redirect(url_for('home'))
-
-@app.before_first_request
-def init_db():
-    db.create_all()
-    if not Game.query.first():
-        games = [
-            Game(name='Fortnite', image_url='https://upload.wikimedia.org/wikipedia/en/thumb/0/09/Fortnite_cover.jpg/220px-Fortnite_cover.jpg', price=0.0),
-            Game(name='Minecraft', image_url='https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png', price=26.95),
-            Game(name='Terraria', image_url='https://upload.wikimedia.org/wikipedia/en/1/1e/Terraria_Steam_artwork.jpg', price=9.99),
-            Game(name='Rust', image_url='https://upload.wikimedia.org/wikipedia/en/7/70/Rust_coverart.jpg', price=39.99),
-            Game(name='Dota 2', image_url='https://upload.wikimedia.org/wikipedia/en/6/6d/Dota_2_cover.jpg', price=0.0),
-        ]
-        db.session.add_all(games)
+    try:
+        amount = float(request.form['amount'])
+        user = User.query.get(session['user_id'])
+        user.balance += amount
         db.session.commit()
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
+    except ValueError:
+        flash('Invalid amount')
+    return redirect(url_for('home'))
 
 @app.route('/profile')
 def profile():
@@ -119,3 +103,24 @@ def profile():
         return redirect(url_for('login'))
     user = User.query.get(session['user_id'])
     return render_template('profile.html', user=user)
+
+def init_db():
+    if not os.path.exists('instance'):
+        os.makedirs('instance')
+    if not os.path.exists('instance/staem.db'):
+        db.create_all()
+        if not Game.query.first():
+            games = [
+                Game(name='Fortnite', image_url='https://upload.wikimedia.org/wikipedia/en/thumb/0/09/Fortnite_cover.jpg/220px-Fortnite_cover.jpg', price=0.0),
+                Game(name='Minecraft', image_url='https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png', price=26.95),
+                Game(name='Terraria', image_url='https://upload.wikimedia.org/wikipedia/en/1/1e/Terraria_Steam_artwork.jpg', price=9.99),
+                Game(name='Rust', image_url='https://upload.wikimedia.org/wikipedia/en/7/70/Rust_coverart.jpg', price=39.99),
+                Game(name='Dota 2', image_url='https://upload.wikimedia.org/wikipedia/en/6/6d/Dota_2_cover.jpg', price=0.0),
+            ]
+            db.session.add_all(games)
+            db.session.commit()
+
+if __name__ == '__main__':
+    with app.app_context():
+        init_db()
+    app.run(debug=True)
