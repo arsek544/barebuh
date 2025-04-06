@@ -1,0 +1,24 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Особистий кабінет</h2>
+  <p><strong>Логін:</strong> {{ user.username }}</p>
+  <p><strong>Баланс:</strong> ${{ '%.2f'|format(user.balance) }}</p>
+  <h4 class="mt-4">Моя бібліотека ігор</h4>
+  <div class="row">
+    {% for game in user.games %}
+      <div class="col-md-3 mb-4">
+        <div class="card">
+          <img src="{{ game.image_url }}" class="card-img-top" alt="{{ game.name }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ game.name }}</h5>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <p>Ігор ще немає.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
