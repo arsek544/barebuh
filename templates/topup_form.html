@@ -1,0 +1,12 @@
+
+<form action="{{ url_for('topup') }}" method="POST" class="mt-4">
+  <div class="mb-3">
+    <label for="amount" class="form-label">Сума поповнення</label>
+    <input type="number" class="form-control" id="amount" name="amount" min="1" step="0.01" required>
+  </div>
+  <div class="mb-3">
+    <label for="card" class="form-label">Номер картки (16 цифр)</label>
+    <input type="text" class="form-control" id="card" maxlength="16" minlength="16" pattern="\d{16}" required>
+  </div>
+  <button type="submit" class="btn btn-success">Поповнити</button>
+</form>

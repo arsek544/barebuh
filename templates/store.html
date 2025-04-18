@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Магазин ігор</h1>
+<div class="row">
+    {% for game_id, game in games.items() %}
+    <div class="col-md-4 mb-4">
+        <div class="card game-card h-100">
+            <div class="card-body">
+                <h5>{{ game.name }}</h5>
+                <p class="text-muted">{{ game.desc }}</p>
+                <p class="h5 {% if game.price == 0 %}text-success{% endif %}">
+                    {% if game.price == 0 %}
+                        Безкоштовно
+                    {% else %}
+                        {{ game.price }} ₴
+                    {% endif %}
+                </p>
+            </div>
+            <div class="card-footer bg-dark">
+                {% if game_id in user_games %}
+                    <button class="btn btn-success w-100" disabled>В бібліотеці</button>
+                {% else %}
+                    <a href="/buy/{{ game_id }}" class="btn btn-primary w-100">
+                        {% if game.price == 0 %}Отримати{% else %}Купити{% endif %}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

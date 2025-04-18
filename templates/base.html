@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>STAEM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --main-bg: #1b2838;
+            --accent: #66c0f4;
+            --text: #ffffff;
+        }
+        body {
+            background: var(--main-bg);
+            color: var(--text);
+            font-family: Arial, sans-serif;
+        }
+        .navbar {
+            background: #171a21 !important;
+            border-bottom: 1px solid var(--accent);
+        }
+        .game-card {
+            background: #2a475e;
+            border: 1px solid var(--accent);
+            transition: all 0.3s;
+        }
+        .game-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 15px var(--accent);
+        }
+        .btn-primary {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
+        .balance {
+            color: var(--accent);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/">STAEM</a>
+            <div class="d-flex">
+                {% if user %}
+                    <a href="/profile" class="btn btn-primary me-2">
+                        Профіль (<span class="balance">{{ user.balance }} ₴</span>)
+                    </a>
+                    <a href="/logout" class="btn btn-outline-light">Вийти</a>
+                {% else %}
+                    <a href="/login" class="btn btn-outline-light me-2">Увійти</a>
+                    <a href="/register" class="btn btn-primary">Реєстрація</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

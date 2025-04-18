@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3>{{ user.username }}</h3>
+                <p class="h4 balance">{{ user.balance }} ₴</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <h2>Мої ігри</h2>
+        {% if not games %}
+            <div class="alert alert-info">У вас ще немає ігор</div>
+        {% else %}
+            <div class="row">
+                {% for game in games %}
+                <div class="col-md-6 mb-3">
+                    <div class="card game-card">
+                        <div class="card-body">
+                            <h5>{{ game.name }}</h5>
+                            <button class="btn btn-primary">Грати</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
