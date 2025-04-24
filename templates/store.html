@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Баланс: ${{ "%.2f"|format(user.cash) }}</h1>
+    <a href="/logout">Выйти</a>
+    
+    <form method="POST">
+        $<input type="number" name="amount" min="1" step="0.01" required>
+        <button type="submit" name="add_cash">Пополнить</button>
+    </form>
+
+    <h2>Игры:</h2>
+    <ul>
+        {% for game in games %}
+            <li>
+                {{ game.title }} - ${{ "%.2f"|format(game.price) }}
+                {% if game.id in my_games %}
+                    (✓ В библиотеке)
+                {% else %}
+                    <form method="POST" style="display: inline;">
+                        <input type="hidden" name="game_id" value="{{ game.id }}">
+                        <button type="submit" name="buy">Купить</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    
+    {% for msg in get_flashed_messages() %}
+        <p>{{ msg }}</p>
+    {% endfor %}
+</body>
+</html>
